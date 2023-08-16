@@ -1,0 +1,11 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <ui:VisualElement style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); flex-direction: row; padding-left: 20px; padding-right: 20px; padding-top: 20px; padding-bottom: 20px;">
+        <ui:VisualElement style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); align-items: center; justify-content: center; min-height: 100px;">
+            <ui:ListView name="chatList" style="background-color: rgba(0, 0, 0, 0.24); width: 500px; align-items: flex-start; margin-left: 0; margin-right: 0; margin-top: 0; margin-bottom: 0; padding-left: 0; padding-right: 0; padding-top: 0; padding-bottom: 0;" />
+            <ui:TextField picking-mode="Ignore" value="filler text" name="sendMessage" style="width: 500px; height: 40px; font-size: 14px; align-items: flex-end; padding-left: 0; padding-right: 0; padding-top: 0; padding-bottom: 0; margin-left: 15px; margin-right: 15px; margin-top: 15px; margin-bottom: 15px;">
+                <ui:Button text="Send" display-tooltip-when-elided="true" name="sendButton" style="width: 100px; height: auto;" />
+            </ui:TextField>
+        </ui:VisualElement>
+        <ui:Button text="Exit" display-tooltip-when-elided="true" name="exitButton" style="width: 80px; height: 30px;" />
+    </ui:VisualElement>
+</ui:UXML>

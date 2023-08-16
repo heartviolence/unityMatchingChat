@@ -1,0 +1,24 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net7.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="MagicOnion.Shared" Version="5.1.8" />
+        <PackageReference Include="MessagePack.UnityShims" Version="2.6.100-alpha" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <Compile Include="..\Chat.Unity\Assets\Scripts\ChatApp\Server\**\*.cs" LinkBase="Server" />
+        <Compile Update="..\Chat.Unity\Assets\Scripts\ChatApp\Server\Hubs\IChatMatchingHub.cs">
+          <Link>Server\Hubs\IChatMatchingHub.cs</Link>
+        </Compile>
+        <Compile Update="..\Chat.Unity\Assets\Scripts\ChatApp\Server\Hubs\IChatMatchingHubReceiver.cs">
+          <Link>Server\Hubs\IChatMatchingHubReceiver.cs</Link>
+        </Compile>
+    </ItemGroup>
+
+</Project>
