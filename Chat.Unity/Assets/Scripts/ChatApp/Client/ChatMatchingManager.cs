@@ -3,7 +3,9 @@ using System.Threading;
 using ChatApp.Client.UI;
 using ChatApp.Data;
 using ChatApp.Server.Hubs;
+using Cysharp.Net.Http;
 using Grpc.Core;
+using Grpc.Net.Client;
 using MagicOnion;
 using MagicOnion.Client;
 using UnityEditor.VersionControl;
@@ -21,18 +23,29 @@ namespace ChatApp.Client
         private CancellationTokenSource shutdownCancellation;
 
         //연결채널
-        private ChannelBase channel;
+        private GrpcChannel channel;
 
         //서버 rpc호출용
         private IChatMatchingHub streamingClient;
+
+        void Start()
+        {
+            shutdownCancellation = new CancellationTokenSource();
+
+            channel = GrpcChannel.ForAddress(ServerInfo.MatchingServerAddress, new GrpcChannelOptions()
+            {
+                HttpHandler = new YetAnotherHttpHandler()
+                {
+                    SkipCertificateVerification = true
+                },
+                DisposeHttpClient = true
+            });
+        }
 
         public async void MatchingAsync(string username)
         {
             try
             {
-                shutdownCancellation = new CancellationTokenSource();
-                channel = GrpcChannelx.ForAddress(ServerInfo.MatchingServerAddress);
-
                 streamingClient =
                     await StreamingHubClient.ConnectAsync<IChatMatchingHub, IChatMatchingHubReceiver>(channel, this,
                         cancellationToken: shutdownCancellation.Token);
@@ -50,7 +63,7 @@ namespace ChatApp.Client
         {
             ChatSceneUI.instance.GoToMainMenu();
 
-            shutdownCancellation.Cancel();
+            await streamingClient.DisposeAsync();
 
             if (streamingClient != null) await streamingClient.DisposeAsync();
             if (channel != null) await channel.ShutdownAsync();

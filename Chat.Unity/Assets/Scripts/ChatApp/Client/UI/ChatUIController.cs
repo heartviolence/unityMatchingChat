@@ -26,9 +26,9 @@ namespace ChatApp.Client.UI
             listview.itemsSource = chatManager.ChatLog;
             chatManager.ChatLog.CollectionChanged += RefreshListView;
 
-            sendButton.clicked += () =>
+            sendButton.clicked += async () =>
             {
-                chatManager.SendMessage(sendMessageField.value);
+                await chatManager.SendMessageAsync(sendMessageField.value);
                 sendMessageField.value = "";
             };
 

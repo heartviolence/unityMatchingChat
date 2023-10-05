@@ -7,7 +7,9 @@ using System.Threading.Tasks;
 using ChatApp.Client.UI;
 using ChatApp.Data;
 using ChatApp.Server.Hubs;
+using Cysharp.Net.Http;
 using Grpc.Core;
+using Grpc.Net.Client;
 using MagicOnion;
 using MagicOnion.Client;
 using UnityEngine;
@@ -28,12 +30,22 @@ namespace ChatApp.Client
         //서버 호출용
         private IChatAppHub streamingClient;
 
+        void Start()
+        {
+            shutdownCancellation = new CancellationTokenSource();
+            channel = GrpcChannel.ForAddress(ServerInfo.ChatServerAddress, new GrpcChannelOptions()
+            {
+                HttpHandler = new YetAnotherHttpHandler()
+                {
+                    SkipCertificateVerification = true
+                },
+                DisposeHttpClient = true
+            });
+        }
         public async Task<bool> ConnectServerAsync(Guid chatRoomId, Guid userId, string username)
         {
             try
             {
-                shutdownCancellation = new CancellationTokenSource();
-                channel = GrpcChannelx.ForAddress(ServerInfo.ChatServerAddress);
                 streamingClient =
                     await StreamingHubClient.ConnectAsync<IChatAppHub, IChatAppHubReceiver>(channel, this,
                         cancellationToken: shutdownCancellation.Token);
@@ -53,7 +65,7 @@ namespace ChatApp.Client
             ExitChatRoom();
         }
 
-        public async void SendMessage(string message)
+        public async Task SendMessageAsync(string message)
         {
             await streamingClient?.SendMessageAsync(message);
         }
@@ -63,7 +75,7 @@ namespace ChatApp.Client
             ChatSceneUI.instance.GoToMainMenu();
             ChatLog.Clear();
 
-            shutdownCancellation.Cancel();
+
 
             if (streamingClient != null) await streamingClient.DisposeAsync();
             if (channel != null) await channel.ShutdownAsync();
@@ -84,6 +96,12 @@ namespace ChatApp.Client
         public void OnSendMessage(string username, string message)
         {
             ChatLog.Add($"{username} : {message}");
+        }
+
+        void OnDestroy()
+        {
+            shutdownCancellation?.Cancel();
+            shutdownCancellation?.Dispose();
         }
     }
 }

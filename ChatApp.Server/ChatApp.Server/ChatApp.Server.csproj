@@ -9,6 +9,7 @@
     <ItemGroup>
         <PackageReference Include="Grpc.AspNetCore" Version="2.49.0" />
         <PackageReference Include="MagicOnion.Server" Version="5.1.8" />
+        <PackageReference Include="MagicOnion.Server.Redis" Version="5.1.8" />
     </ItemGroup>
 
     <ItemGroup>
